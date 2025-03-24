@@ -11,7 +11,7 @@ export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction)
   const token = req.header("Authorization")?.split(" ")[1];
 
   if (!token) {
-    res.status(401).json({ message: "Token үүсгээгүй байна." });
+    res.status(401).json({ message: "Хандах эрхийн токен олдсонгүй." });
     return;
   }
 
@@ -20,6 +20,5 @@ export const verifyToken = (req: AuthRequest, res: Response, next: NextFunction)
     req.user = decoded;
     next();
   } catch (err) {
-    res.status(403).json({ message: "Token-ны хугацаа дууссан байна." });
-  }
+    res.status(403).json({ message: "Хүчингүй эсвэл хугацаа нь дууссан токен." });  }
 };

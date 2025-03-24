@@ -4,8 +4,11 @@ import helmet from "helmet";
 import bodyParser from "body-parser";
 import * as dotenv from "dotenv";
 import morgan from "morgan";
-import router from "./routes";
+import router from "./routes/index";
 import { errorHandler } from "./middlewares/errorHandler";
+import swaggerSpec  from "./utils/swaggerConfig";
+import swaggerUi from "swagger-ui-express";
+
 
 dotenv.config();
 
@@ -24,7 +27,10 @@ app.use(
 );
 
 app.use("/api", router);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
 app.use(errorHandler)
+
 
 const PORT = process.env.PORT || 3000;
 

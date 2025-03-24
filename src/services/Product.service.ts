@@ -1,8 +1,17 @@
 import prisma from "../database/index";
 
-export const getProducts = async () => {
-  return prisma.products.findMany();
+export const getProducts = async (offset: number, limit: number) => {
+  const paginationedProducts = await prisma.products.findMany({
+    take: limit,
+    skip: offset,
+    orderBy: { id: "asc" },
+  })
+  return paginationedProducts;
 };
+
+export const countProducts = async () => {
+  return prisma.products.count();
+}
 
 export const createProduct = async (name: string, price: number) => {
   return prisma.products.create({ data: { name, price } });

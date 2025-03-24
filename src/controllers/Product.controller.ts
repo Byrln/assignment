@@ -1,10 +1,18 @@
 import { Request, Response, NextFunction } from "express";
-import { createProduct, getProducts, updateProduct, deleteProduct } from "../services/Product.service";
+import { createProduct, getProducts, updateProduct, deleteProduct, countProducts } from "../services/Product.service";
 
 export const list = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const products = await getProducts();
-    res.json({ success: true, products });
+    const page = parseInt(req.query.page as string) || 1;
+    const limit = parseInt(req.query.limit as string) || 10;
+    const offset = (page - 1) * limit;
+
+    const products = await getProducts(offset, limit);
+
+    const totalProducts = await countProducts();
+    const totalPage = Math.ceil(totalProducts / limit);
+
+    res.json({ page, limit, totalPage, totalProducts, products });
   } catch (error) {
     next(error);
   }
